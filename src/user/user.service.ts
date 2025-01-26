@@ -6,6 +6,9 @@ import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hashPasswordFunc } from 'src/helper/password.helper';
 import { plainToInstance } from 'class-transformer';
+import { CreateAuthDto } from 'src/auth/dto/create-auth.dto';
+import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class UserService {
@@ -77,4 +80,31 @@ export class UserService {
   async findUserByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne({ where: { email } })
   }
+
+
+  async handleRegister(registerDto: CreateAuthDto): Promise<any> {
+
+    const { email, password } = registerDto
+
+    const userByEmail = await this.userRepository.findOne({ where: { email } })
+
+    if (userByEmail) {
+      throw new BadRequestException("Email is exist")
+    }
+
+    const hashPassword: string = await hashPasswordFunc(password)
+
+    const user = {
+      ...registerDto,
+      password: hashPassword,
+      isActive: "false",
+      codeId: uuidv4(),
+      codeExpired: dayjs().add(1, 'minutes').toDate(),
+    }
+
+    const savedUser = await this.userRepository.save(user)
+    return plainToInstance(User, savedUser)
+
+  }
+
 }

@@ -3,12 +3,15 @@ import { JwtService } from '@nestjs/jwt';
 import { comparePassword } from 'src/helper/password.helper';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
+import { CreateAuthDto } from './dto/create-auth.dto';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UserService,
-        private readonly jwtService: JwtService
+        private readonly jwtService: JwtService,
+        private readonly emailService: EmailService
     ) {
     }
 
@@ -48,5 +51,13 @@ export class AuthService {
         const passport = { id: user.id, email: user.email }
         const access_token = await this.jwtService.signAsync(passport)
         return { access_token: access_token }
+    }
+
+    async handleRegister(registerDto: CreateAuthDto) {
+        return this.userService.handleRegister(registerDto)
+    }
+
+    async sendEmail() {
+        return this.emailService.sendMail()
     }
 }

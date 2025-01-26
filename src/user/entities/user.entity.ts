@@ -14,20 +14,17 @@ export class User {
   @Exclude()
   password: string
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   first_name: string
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   last_name: string
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
   phone_number: string
 
   @Column({ type: 'varchar', length: 50, default: 'user' })
   role: string
-
-  @Column({ type: 'enum', enum: ['active', 'inactive'], default: 'active' })
-  status: string
 
   @CreateDateColumn()
   created_at: Date
@@ -38,6 +35,15 @@ export class User {
   @Column({ type: 'timestamp', nullable: true })
   last_login: Date
 
-  @Column({type: 'varchar', nullable: true})
+  @Column({ type: 'varchar', nullable: true })
   profile_picture: string
+
+  @Column({ type: 'varchar', nullable: true })
+  isActive: string
+
+  @Column({ type: 'varchar', nullable: true })
+  codeId: string
+
+  @Column({ type: 'timestamp', nullable: true })
+  codeExpired: Date
 }
