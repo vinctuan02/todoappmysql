@@ -1,32 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class EmailService {
-  private transporter: nodemailer.Transporter;
+    constructor(private readonly mailerService: MailerService) { }
 
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com', // SMTP server của bạn, ví dụ Gmail
-      port: 587,
-      secure: false, // true nếu bạn dùng port 465, false nếu 587
-      auth: {
-        user: 'vinctuandev02@gmail.com', // Email của bạn
-        pass: 'zbmqlucjpmbpobys', // Mật khẩu ứng dụng (App Password) hoặc mật khẩu email
-      },
-    });
-  }
+    async sendTestEmail(to: string) {
+        try {
+            await this.mailerService.sendMail({
+                to,
+                subject: 'Test Email with Handlebars',
+                template: 'test-email', // Tên file HBS, không cần .hbs
+                context: { // Dữ liệu truyền vào HBS
+                    name: "tuan",
+                    message: "test",
+                    date: new Date().toLocaleString(),
+                },
+            });
+            console.log('Email sent successfully');
+        } catch (error) {
+            console.error('Error sending email:', error);
+        }
+    }
 
-  // async sendMail(to: string, subject: string, text: string, html?: string): Promise<void> {
-  async sendMail(): Promise<void> {
-    const mailOptions = {
-      from: '"Vinc02" vinctuandev02@gmail.com', // Tên người gửi
-      to: 'vinctuan02@gmail.com',
-      subject: 'Test', // Chủ đề email
-      text: 'test', // Nội dung dạng text
-      html: 'test', // Nội dung dạng HTML (tùy chọn)
-    };
-
-    await this.transporter.sendMail(mailOptions);
-  }
+    async sendVerificationEmail(to: string, codeId: string, codeExpired: Date, CODE_EXPIRED: string) {
+        try {
+            await this.mailerService.sendMail({
+                to,
+                subject: 'Account registration verification email',
+                template: 'account-registration-verification', // Tên file HBS, không cần .hbs
+                context: { // Dữ liệu truyền vào HBS
+                    name: to,
+                    verificationCode: codeId,
+                    verificationLink: '',
+                    codeExpired: codeExpired,
+                    CODE_EXPIRED: CODE_EXPIRED
+                },
+            });
+            console.log('Email sent successfully');
+        } catch (error) {
+            console.error('Error sending email:', error);
+        }
+    }
 }

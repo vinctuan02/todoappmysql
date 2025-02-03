@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #348EFE;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            margin: 10px 0;
+        }
+
+        .code-box {
+            display: inline-block;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #348EFE;
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #348EFE;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Account Verification</h1>
+        </div>
+
+        <div class="content">
+            <p>Hello {{ name }},</p>
+            <p>Thank you for registering an account on <strong>Our Website</strong>!</p>
+            <p>To complete the registration process, please enter the verification code below on our website:</p>
+
+            <!-- Display verification code -->
+            <div class="code-box">
+                {{verificationCode}}
+            </div>
+
+            <p>This verification code is unique and will expire in {{CODE_EXPIRED}} minutes.</p>
+            <p>The code will expire at {{codeExpired}}</p>
+            {{!-- <p style="text-align: center;">
+                <a href="{{verificationLink}}" class="btn">Verify Account</a>
+            </p> --}}
+        </div>
+
+        <div class="footer">
+            <p>Best regards,</p>
+            <p><strong>The Support Team of Website</strong></p>
+            <p>Our Website</p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -8,6 +8,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getTypeOrmConfig } from './config/typeorm.config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { EmailModule } from './email/email.module';
+
 
 @Module({
   imports: [
@@ -20,7 +22,8 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: getTypeOrmConfig
-    })
+    }),
+    EmailModule
   ],
   controllers: [AppController],
   providers: [AppService,

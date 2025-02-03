@@ -4,14 +4,14 @@ import { comparePassword } from 'src/helper/password.helper';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { EmailService } from 'src/email/email.service';
+// import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
-        private readonly emailService: EmailService
+        // private readonly emailService: EmailService
     ) {
     }
 
@@ -58,6 +58,6 @@ export class AuthService {
     }
 
     async sendEmail() {
-        return this.emailService.sendMail()
+        // return this.emailService.sendMail()
     }
 }

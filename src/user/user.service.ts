@@ -7,15 +7,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { hashPasswordFunc } from 'src/helper/password.helper';
 import { plainToInstance } from 'class-transformer';
 import { CreateAuthDto } from 'src/auth/dto/create-auth.dto';
-import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
+import { EmailService } from 'src/email/email.service';
+import { generateVerificationCode } from 'src/helper/random.code';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private readonly emailService: EmailService,
+    private readonly configService: ConfigService
   ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -94,17 +98,27 @@ export class UserService {
 
     const hashPassword: string = await hashPasswordFunc(password)
 
+    const CODE_EXPIRED = this.configService.get<string>('CODE_EXPIRED')
+
     const user = {
       ...registerDto,
       password: hashPassword,
       isActive: "false",
-      codeId: uuidv4(),
-      codeExpired: dayjs().add(1, 'minutes').toDate(),
+      codeId: generateVerificationCode(),
+      codeExpired: dayjs().add(+CODE_EXPIRED, 'minutes').toDate(),
     }
 
     const savedUser = await this.userRepository.save(user)
+
+    if (savedUser) {
+      this.emailService.sendVerificationEmail(
+        user.email,
+        user.codeId,
+        user.codeExpired,
+        CODE_EXPIRED
+      )
+    }
+
     return plainToInstance(User, savedUser)
-
   }
-
 }
